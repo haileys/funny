@@ -32,7 +32,7 @@ module Funny
     end
     
     def Integer(node)
-      raise "Non-natural numbers not supposed" if node.integer < 0
+      raise "Non-natural numbers not supported" if node.integer < 0
       body = "x"
       node.integer.times { body = "p[#{body}]" }
       "->p{->x{#{body}}}"
@@ -42,14 +42,6 @@ module Funny
       @non_globals << node.argument
       "->#{ruby_name node.argument || "*"}{#{compile_node node.body}}".tap do
         @non_globals.pop
-      end
-    end  
-    
-    def Let(node)
-      if node.recursive?
-        raise "no recursion sorry"
-      else
-        "#{node.name} = #{compile_node node.value}\n\n"
       end
     end
     
