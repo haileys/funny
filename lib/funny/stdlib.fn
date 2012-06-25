@@ -1,0 +1,40 @@
+true(a, b) = a
+false(a, b) = b
+if(c, t, f) = c(t, f)
+
+isZero(n) = n(-> false, true)
+
+succ(n) = f -> x -> f(n(f, x))
+pred(n) = f -> x -> n(g -> h -> h(g(f)), -> x, y -> y)
+
+`+`(a, b) = b(succ, a)
+`-`(a, b) = b(pred, a)
+`*`(a, b) = b(c -> a + c, 0)
+`**`(a, b) = b(c -> a * c, 1)
+
+`&&`(a, b) = if(a, b, false)
+`||`(a, b) = if(a, true, b)
+`!`(x) = if(x, false, true)
+
+`<=`(a, b) = isZero(a - b)
+`>=`(a, b) = b <= a
+`==`(a, b) = a <= b && a >= b
+`<`(a, b) = a <= b && !(a == b)
+`>`(a, b) = a >= b && !(a == b)
+
+pair(a, b) = f -> f(a, b)
+left(pair) = pair(l -> r -> l)
+right(pair) = pair(l -> r -> r)
+
+nullList = pair(true, true)
+`:`(x, l) = pair(false, pair(x, l))
+isNull = left
+car(list) = left(right(list))
+cdr(list) = right(right(list))
+
+Y(f) = (x -> f(y -> x(x, y)))(x -> f(y -> x(x, y)))
+
+fold = Y(f -> l -> x -> g -> if(isNull(l), x, y -> g(f(cdr(l), x, g), car(l), y)))
+map(list, f) = fold(list, nullList, l -> x -> f(x) : l)
+
+`%` = Y(f -> m -> n -> if(n <= m, x -> f(m - n, n, x), m))

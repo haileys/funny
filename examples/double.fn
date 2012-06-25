@@ -1,0 +1,5 @@
+sum(a,b) = a + b
+
+double(n) = n + n
+
+main = sum(double(10), 7)
